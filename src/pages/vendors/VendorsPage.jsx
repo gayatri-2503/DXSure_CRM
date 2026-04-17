@@ -75,7 +75,7 @@ export default function VendorsPage() {
   const deleteVendor = useDeleteVendor();
 
   const handleCreate = async (data) => {
-    await createVendor.mutateAsync({ ...data, created_by: user?.id || null });
+    await createVendor.mutateAsync(data);
     setShowForm(false);
   };
 

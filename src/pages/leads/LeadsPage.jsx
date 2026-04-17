@@ -23,7 +23,7 @@ export default function LeadsPage() {
   const createLead = useCreateLead();
 
   const handleCreate = async (data) => {
-    await createLead.mutateAsync({ ...data, created_by: user?.id || null });
+    await createLead.mutateAsync(data);
     setShowForm(false);
   };
 
