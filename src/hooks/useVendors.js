@@ -31,7 +31,14 @@ export function useCreateVendor() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (vendor) => {
-      const { data, error } = await supabase.from('vendors').insert(vendor).select().single();
+      let { data, error } = await supabase.from('vendors').insert(vendor).select().single();
+      if (error?.message?.includes('column "company"')) {
+        const sanitized = { ...vendor };
+        delete sanitized.company;
+        const retry = await supabase.from('vendors').insert(sanitized).select().single();
+        if (retry.error) throw retry.error;
+        return retry.data;
+      }
       if (error) throw error;
       return data;
     },
@@ -47,7 +54,14 @@ export function useUpdateVendor() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...updates }) => {
-      const { data, error } = await supabase.from('vendors').update(updates).eq('id', id).select().single();
+      let { data, error } = await supabase.from('vendors').update(updates).eq('id', id).select().single();
+      if (error?.message?.includes('column "company"')) {
+        const sanitized = { ...updates };
+        delete sanitized.company;
+        const retry = await supabase.from('vendors').update(sanitized).eq('id', id).select().single();
+        if (retry.error) throw retry.error;
+        return retry.data;
+      }
       if (error) throw error;
       return data;
     },

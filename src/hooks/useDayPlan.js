@@ -11,7 +11,15 @@ export function useDayPlans(filters = {}) {
       if (filters.status) query = query.eq('status', filters.status);
       if (filters.user_id) query = query.eq('user_id', filters.user_id);
       if (filters.date) query = query.eq('plan_date', filters.date);
-      const { data, error } = await query;
+      let { data, error } = await query;
+      if (error?.message?.includes('column "user_id"') && filters.user_id) {
+        let fallback = supabase.from('day_plans').select('*, profile:profiles!day_plans_user_id_fkey(name)').order('plan_date', { ascending: false });
+        if (filters.status) fallback = fallback.eq('status', filters.status);
+        if (filters.date) fallback = fallback.eq('plan_date', filters.date);
+        const retry = await fallback;
+        if (retry.error) throw retry.error;
+        return retry.data;
+      }
       if (error) throw error;
       return data;
     },
@@ -34,7 +42,14 @@ export function useCreateDayPlan() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (plan) => {
-      const { data, error } = await supabase.from('day_plans').insert(plan).select().single();
+      let { data, error } = await supabase.from('day_plans').insert(plan).select().single();
+      if (error?.message?.includes('column "user_id"')) {
+        const sanitized = { ...plan };
+        delete sanitized.user_id;
+        const retry = await supabase.from('day_plans').insert(sanitized).select().single();
+        if (retry.error) throw retry.error;
+        return retry.data;
+      }
       if (error) throw error;
       return data;
     },

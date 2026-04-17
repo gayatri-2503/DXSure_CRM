@@ -18,7 +18,6 @@ const vendorSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email').or(z.literal('')).optional(),
   phone: z.string().optional(),
-  company: z.string().optional(),
   address: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -30,7 +29,6 @@ function VendorForm({ initialData, onSubmit, loading }) {
       name: initialData?.name || '',
       email: initialData?.email || '',
       phone: initialData?.phone || '',
-      company: initialData?.company || '',
       address: initialData?.address || '',
       notes: initialData?.notes || '',
     },
@@ -42,7 +40,6 @@ function VendorForm({ initialData, onSubmit, loading }) {
         <Input label="Name" error={errors.name?.message} {...register('name')} />
         <Input label="Email" type="email" {...register('email')} />
         <Input label="Phone" {...register('phone')} />
-        <Input label="Company" {...register('company')} />
       </div>
       <Input label="Address" {...register('address')} />
       <Textarea label="Notes" rows={3} {...register('notes')} />
@@ -55,7 +52,6 @@ const columns = [
   { key: 'name', label: 'Name', sortable: true },
   { key: 'email', label: 'Email' },
   { key: 'phone', label: 'Phone' },
-  { key: 'company', label: 'Company' },
   {
     key: 'created_at',
     label: 'Added',

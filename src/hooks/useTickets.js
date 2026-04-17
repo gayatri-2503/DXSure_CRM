@@ -35,7 +35,14 @@ export function useCreateTicket() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (ticket) => {
-      const { data, error } = await supabase.from('tickets').insert(ticket).select().single();
+      let { data, error } = await supabase.from('tickets').insert(ticket).select().single();
+      if (error?.message?.includes('column "user_id"')) {
+        const sanitized = { ...ticket };
+        delete sanitized.user_id;
+        const retry = await supabase.from('tickets').insert(sanitized).select().single();
+        if (retry.error) throw retry.error;
+        return retry.data;
+      }
       if (error) throw error;
       return data;
     },
