@@ -12,7 +12,7 @@ const ticketSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   priority: z.string().optional(),
-  assigned_to: z.string().min(1, 'Please assign to an employee'),
+  assigned_to: z.string().optional(),
   due_date: z.string().optional(),
   client_id: z.string().optional(),
 });
