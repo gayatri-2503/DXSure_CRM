@@ -23,8 +23,21 @@ export default function TicketsPage() {
   const createTicket = useCreateTicket();
 
   const handleCreate = async (data) => {
-    await createTicket.mutateAsync({ ...data, status: 'pending', created_by: user?.id || null });
-    setShowForm(false);
+    console.log('Creating ticket with data:', data);
+    try {
+      const ticketData = {
+        ...data,
+        status: 'pending',
+        created_by: user?.id || null,
+        assigned_to: data.assigned_to || null,
+        client_id: data.client_id || null,
+        due_date: data.due_date || null,
+      };
+      await createTicket.mutateAsync(ticketData);
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error creating ticket:', error);
+    }
   };
 
   const tabs = [{ value: '', label: 'All' }, ...TICKET_STATUSES];
