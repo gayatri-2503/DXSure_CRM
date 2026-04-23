@@ -36,7 +36,7 @@ export function useCreateTicket() {
   return useMutation({
     mutationFn: async (ticket) => {
       let { data, error } = await supabase.from('tickets').insert(ticket).select().single();
-      if (error?.message?.includes('column "user_id"')) {
+      if (error?.message?.includes('violates foreign key constraint') || error?.message?.includes('foreign key')) {
         const sanitized = { ...ticket };
         delete sanitized.user_id;
         const retry = await supabase.from('tickets').insert(sanitized).select().single();
