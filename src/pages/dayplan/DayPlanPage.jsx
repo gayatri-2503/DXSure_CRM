@@ -16,12 +16,12 @@ export default function DayPlanPage() {
   const [showForm, setShowForm] = useState(false);
   const [filter, setFilter] = useState('');
 
-  const { data: plans, isLoading } = useDayPlans({ status: filter || undefined, user_id: !isAdmin ? user?.id : undefined });
+  const { data: plans, isLoading } = useDayPlans({ status: filter || undefined, user_id: !isAdmin && user?.id !== 'dummy-dev-id' ? user?.id : undefined });
   const createPlan = useCreateDayPlan();
   const updatePlan = useUpdateDayPlan();
 
   const handleCreate = async (data) => {
-    await createPlan.mutateAsync({ ...data, user_id: user.id, status: 'draft' });
+    await createPlan.mutateAsync({ ...data, user_id: user?.id && user.id !== 'dummy-dev-id' ? user.id : null, status: 'draft' });
     setShowForm(false);
   };
 
