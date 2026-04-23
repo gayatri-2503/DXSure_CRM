@@ -28,11 +28,12 @@ export default function TicketsPage() {
       const ticketData = {
         ...data,
         status: 'pending',
-        created_by: user?.id || null,
+        created_by: user?.id && user.id !== 'dummy-dev-id' ? user.id : null,
         assigned_to: data.assigned_to || null,
         client_id: data.client_id || null,
         due_date: data.due_date || null,
       };
+      console.log('Final ticket data:', ticketData);
       await createTicket.mutateAsync(ticketData);
       setShowForm(false);
     } catch (error) {
