@@ -38,7 +38,7 @@ export function useCreateTicket() {
       let { data, error } = await supabase.from('tickets').insert(ticket).select().single();
       if (error?.message?.includes('violates foreign key constraint') || error?.message?.includes('foreign key')) {
         const sanitized = { ...ticket };
-        delete sanitized.user_id;
+        delete sanitized.created_by;
         const retry = await supabase.from('tickets').insert(sanitized).select().single();
         if (retry.error) throw retry.error;
         return retry.data;
