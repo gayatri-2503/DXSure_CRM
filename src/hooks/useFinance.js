@@ -29,8 +29,7 @@ export function useCreateFinanceEntry() {
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['finance'] });
       toast.success('Entry recorded');
-      const action = data.type === 'payment' ? 'recorded_payment' : 'recorded_petty_cash';
-      logActivity(action, 'finance', data.id, `Recorded ${data.type}: ${data.amount}`);
+      logActivity('recorded_finance_entry', 'finance', data.id, `Recorded ${data.type}: ${data.amount}`);
     },
     onError: (err) => toast.error(err.message),
   });
@@ -74,8 +73,8 @@ export function useFinanceStats() {
     queryFn: async () => {
       const { data, error } = await supabase.from('finance_entries').select('type, amount, entry_date');
       if (error) throw error;
-      const income = data.filter(e => e.type === 'payment').reduce((s, e) => s + (e.amount || 0), 0);
-      const expenses = data.filter(e => e.type !== 'payment').reduce((s, e) => s + (e.amount || 0), 0);
+      const income = data.filter(e => e.type === 'salary' || e.type === 'petty_cash').reduce((s, e) => s + (e.amount || 0), 0);
+      const expenses = data.filter(e => e.type === 'expense').reduce((s, e) => s + (e.amount || 0), 0);
       return { income, expenses, net: income - expenses, entries: data };
     },
   });

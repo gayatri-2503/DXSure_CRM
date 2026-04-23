@@ -3,7 +3,6 @@ import Badge from '../ui/Badge';
 import { formatDate, formatCurrency } from '../../lib/utils';
 
 const typeColors = {
-  payment: 'success',
   salary: 'warning',
   petty_cash: 'info',
   expense: 'danger',
@@ -36,8 +35,8 @@ const columns = [
     label: 'Amount',
     sortable: true,
     render: (value, row) => (
-      <span className={row.type === 'payment' ? 'text-success font-medium' : 'text-danger font-medium'}>
-        {row.type === 'payment' ? '+' : '-'}{formatCurrency(value)}
+      <span className={row.type === 'salary' || row.type === 'petty_cash' ? 'text-success font-medium' : 'text-danger font-medium'}>
+        {row.type === 'salary' || row.type === 'petty_cash' ? '+' : '-'}{formatCurrency(value)}
       </span>
     ),
   },

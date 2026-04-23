@@ -72,7 +72,6 @@ export const FINANCE_TYPES = [
   { value: 'salary', label: 'Salary' },
   { value: 'petty_cash', label: 'Petty Cash' },
   { value: 'expense', label: 'Expense' },
-  { value: 'payment', label: 'Payment Received' },
 ];
 
 export const DAYPLAN_STATUSES = [

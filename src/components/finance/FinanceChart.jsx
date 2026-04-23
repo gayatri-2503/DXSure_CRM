@@ -28,7 +28,7 @@ export default function FinanceChart({ data, loading }) {
     const month = entry.entry_date?.slice(0, 7);
     if (!month) return;
     if (!monthlyData[month]) monthlyData[month] = { month, income: 0, expense: 0 };
-    if (entry.type === 'payment') monthlyData[month].income += entry.amount || 0;
+    if (entry.type === 'salary' || entry.type === 'petty_cash') monthlyData[month].income += entry.amount || 0;
     else monthlyData[month].expense += entry.amount || 0;
   });
 
