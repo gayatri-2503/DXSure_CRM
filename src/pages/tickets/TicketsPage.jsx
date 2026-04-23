@@ -23,7 +23,6 @@ export default function TicketsPage() {
   const createTicket = useCreateTicket();
 
   const handleCreate = async (data) => {
-    console.log('Creating ticket with data:', data);
     try {
       const ticketData = {
         ...data,
@@ -33,7 +32,6 @@ export default function TicketsPage() {
         client_id: data.client_id || null,
         due_date: data.due_date || null,
       };
-      console.log('Final ticket data:', ticketData);
       await createTicket.mutateAsync(ticketData);
       setShowForm(false);
     } catch (error) {

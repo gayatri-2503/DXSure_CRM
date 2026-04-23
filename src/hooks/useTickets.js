@@ -35,21 +35,15 @@ export function useCreateTicket() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (ticket) => {
-      console.log('useCreateTicket: Inserting ticket:', ticket);
       let { data, error } = await supabase.from('tickets').insert(ticket).select().single();
       if (error?.message?.includes('violates foreign key constraint') || error?.message?.includes('foreign key')) {
-        console.log('useCreateTicket: Foreign key error, retrying without created_by');
         const sanitized = { ...ticket };
         delete sanitized.created_by;
         const retry = await supabase.from('tickets').insert(sanitized).select().single();
         if (retry.error) throw retry.error;
         return retry.data;
       }
-      if (error) {
-        console.error('useCreateTicket: Error inserting ticket:', error);
-        throw error;
-      }
-      console.log('useCreateTicket: Ticket created successfully:', data);
+      if (error) throw error;
       return data;
     },
     onSuccess: (data) => {
