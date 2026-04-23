@@ -8,11 +8,13 @@ import StatCard from '../../components/dashboard/StatCard';
 import Modal from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
 import { useFinanceEntries, useCreateFinanceEntry, useFinanceStats } from '../../hooks/useFinance';
+import { useAuth } from '../../hooks/useAuth';
 import { formatCurrency } from '../../lib/utils';
 import { cn } from '../../lib/utils';
 import { FINANCE_TYPES } from '../../constants';
 
 export default function FinancePage() {
+  const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState('');
   const { data: entries, isLoading } = useFinanceEntries({ type: activeTab || undefined });
@@ -20,7 +22,7 @@ export default function FinancePage() {
   const createEntry = useCreateFinanceEntry();
 
   const handleCreate = async (data) => {
-    await createEntry.mutateAsync(data);
+    await createEntry.mutateAsync({ ...data, created_by: user?.id && user.id !== 'dummy-dev-id' ? user.id : null });
     setShowForm(false);
   };
 

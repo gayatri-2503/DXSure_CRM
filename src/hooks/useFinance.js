@@ -7,7 +7,7 @@ export function useFinanceEntries(filters = {}) {
   return useQuery({
     queryKey: ['finance', filters],
     queryFn: async () => {
-      let query = supabase.from('finance_entries').select('*, client:clients(name), profile:profiles!finance_entries_recorded_by_fkey(name)').order('entry_date', { ascending: false });
+      let query = supabase.from('finance_entries').select('*, client:clients(name), profile:profiles!finance_entries_created_by_fkey(name)').order('entry_date', { ascending: false });
       if (filters.type) query = query.eq('type', filters.type);
       if (filters.date_from) query = query.gte('entry_date', filters.date_from);
       if (filters.date_to) query = query.lte('entry_date', filters.date_to);
