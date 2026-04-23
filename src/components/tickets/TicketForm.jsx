@@ -38,9 +38,9 @@ export default function TicketForm({ initialData, onSubmit, loading }) {
       <Input label="Title" placeholder="Fix login bug" error={errors.title?.message} {...register('title')} />
       <Textarea label="Description" placeholder="Detailed description..." error={errors.description?.message} {...register('description')} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Select label="Priority" options={TICKET_PRIORITIES} {...register('priority')} />
+        <Select label="Priority" options={TICKET_PRIORITIES} error={errors.priority?.message} {...register('priority')} />
         <Select label="Assign To" options={employeeOptions} placeholder="Select employee..." error={errors.assigned_to?.message} {...register('assigned_to')} />
-        <Input label="Due Date" type="date" {...register('due_date')} />
+        <Input label="Due Date" type="date" error={errors.due_date?.message} {...register('due_date')} />
       </div>
       <div className="flex justify-end gap-3 pt-2">
         <Button type="submit" loading={loading}>{initialData ? 'Update Ticket' : 'Create Ticket'}</Button>
